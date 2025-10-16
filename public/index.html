@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <title data-i18n="greenesiaMap">Greenesia - A Better World, Mapped by Community</title>
+  <meta name="description" content="Monitor mangrove forests and plantations in Indonesia with interactive maps and real-time location tracking">
+  <meta name="theme-color" content="#2ecc71">
+  <link rel="icon" href="img/Logo_utama.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/img/icon-192x192.png">
+  <link rel="stylesheet" href="css/style.css?v=3.0">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container navbar">
+      <div class="navbar-brand">
+        <a href="/">
+          <img src="img/Logo_utama.png" alt="Greenesia Logo" class="logo">
+          <span data-i18n="greenesia">Greenesia</span>
+        </a>
+      </div>
+      <div class="nav-wrapper">
+        <button class="close-menu">&times;</button>
+        <nav class="main-nav">
+          <ul>
+            <li><a href="/" data-i18n="home">Home</a></li>
+            <li><a href="/maps" data-i18n="maps">Maps</a></li>
+            <li><a href="/impacts" data-i18n="impacts">Impacts</a></li>
+            <li><a href="/about" data-i18n="about">About</a></li>
+            <li><a href="/news" data-i18n="news">News</a></li>
+            <li><a href="/contact" data-i18n="contact">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="nav-actions">
+          <select class="language-switcher">
+            <option value="en" selected>EN</option>
+            <option value="id">ID</option>
+          </select>
+          <a href="/login" class="button button-donate" data-i18n="getStarted">Get Started</a>
+        </div>
+      </div>
+      <div class="custom-dropdown language-switcher-mobile">
+        <div class="dropdown-trigger">
+          <span class="selected-lang">EN</span>
+        </div>
+        <div class="dropdown-options">
+          <div class="dropdown-option" data-value="en">EN</div>
+          <div class="dropdown-option" data-value="id">ID</div>
+        </div>
+      </div>
+      <button class="hamburger-menu">&#9776;</button>
+    </div>
+  </header>
+
+  <div class="overlay"></div>
+
+  <main>
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 data-i18n="heroTitle">Preserving Indonesia’s Green Heritage</h1>
+        <p data-i18n="heroSubtitle">Greenesia is committed to protecting Indonesia’s natural treasures from tropical forests and mangroves to plantations that sustain life. Together, we can safeguard our earth for a greener future.</p>
+        <a href="/maps" class="button button-primary" data-i18n="exploreMaps">Explore Green Maps</a>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="container two-column-layout">
+        <div class="column-left">
+          <video autoplay muted loop playsinline style="width: 100%;" src="cinematic.mp4">
+   Browser Anda tidak mendukung tag video.
+</video>
+        </div>
+        <div class="column-right">
+          <h2 data-i18n="whatIsGreenMapTitle">What is Greenesia?</h2>
+          <p data-i18n="whatIsGreenMapText">Greenesia is a platform dedicated to environmental preservation in Indonesia. We provide information, interactive maps, and education about forests, mangroves, and plantations, bringing people closer to nature. Greenesia is not just about knowledge, but also a call to action to protect our earth together.</p>
+          <a href="#" class="button button-secondary" data-i18n="learnMore">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section dark-bg">
+      <div class="container text-center">
+        <h2 data-i18n="ourGlobalMovementTitle">Our Global Movement</h2>
+        <p data-i18n="ourGlobalMovementText">At Greenesia, we believe that preserving nature is a shared responsibility. From Indonesia, we carry the spirit of sustainability to the world — connecting communities, sharing knowledge, and inspiring real actions for a better planet. Every small step in our archipelago contributes to global change.</p>
+        <iframe
+          width="100%"
+          height="500"
+          src="https://www.youtube.com/embed/YWSZf4E7uBE"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+          class="youtube-iframe"
+        ></iframe>
+        <a href="#" class="button button-primary" data-i18n="seeOurImpacts">See Our Impacts</a>
+      </div>
+    </section>
+
+    <section class="content-section">
+  <div class="container text-center">
+    <h2 data-i18n="chartingTheFutureTitle">Charting the Future</h2>
+    <div class="three-column-layout">
+      <div class="feature-box">
+        <img src="img/pemetaan.jpg" alt="People looking at a map" class="charting-feature-icon">
+        <h3 data-i18n="forMapmakersTitle">For Mapmakers</h3>
+        <p data-i18n="forMapmakersText">We provide the platform and tools to create and publish your own Green Maps, connecting your community to sustainable living.</p>
+      </div>
+      <div class="feature-box">
+        <img src="img/menanam.jpg" alt="Person planting a tree" class="charting-feature-icon">
+        <h3 data-i18n="forOrganizationsTitle">For Organizations</h3>
+        <p data-i18n="forOrganizationsText">Use Greenesia to engage your members, visualize your impact, and collaborate on projects that build a greener future.</p>
+      </div>
+      <div class="feature-box">
+        <img src="img/keluarga.png" alt="Family enjoying the outdoors" class="charting-feature-icon">
+        <h3 data-i18n="forEveryoneTitle">For Everyone</h3>
+        <p data-i18n="forEveryoneText">Explore maps from around the world, discover local green spots, and get inspired to take action in your own neighborhood.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <section class="content-section light-bg">
+      <div class="container">
+        <h2 class="text-center" data-i18n="latestNews">News</h2>
+        <div class="news-grid">
+          <article class="news-card">
+            <img src="https://asset.kompas.com/crops/d9sgpv270v6snPcaGa5keLDzrmc=/0x0:0x0/1200x800/data/photo/2025/04/16/67ff72c6aaa61.jpg" alt="Ministry of Forestry: 84,000 Hectares of Mangroves Rehabilitated">
+            <div class="card-content">
+              <h3 data-i18n="news1Title">Ministry of Forestry: 84,000 Hectares of Mangroves Rehabilitated Over the Last 5 Years</h3>
+              <p data-i18n="news1Text">The Director of Mangrove Rehabilitation at the Ministry of Forestry (Kemenhut), Ristianto Pribadi, noted that 84,000 hectares of mangroves have been rehabilitated over the past five years. Meanwhile, the government has set a target of rehabilitating 600,000 hectares of mangroves by 2024. Ristianto also acknowledged that the forestry sector has not yet become a government priority program.</p>
+              <a href="https://lestari.kompas.com/read/2025/04/16/171500786/kemenhut--84.000-hektare-mangrove-direhabilitasi-selama-5-tahun-terakhir-" data-i18n="readMore">Read More</a>
+            </div>
+          </article>
+          <article class="news-card">
+            <img src="https://asset-2.tribunnews.com/tribunnews/foto/bank/images/Head-of-Sustainability-PT-Bank-Maybank-Indonesia-Tbk-Maria-Trifanny-Fransiska.jpg" alt="Supporting a Sustainable Generation, Maybank Indonesia">
+            <div class="card-content">
+              <h3 data-i18n="news2Title">Supporting a Sustainable Generation, Maybank Indonesia Highlights the Theme of ‘Green Literacy’ at Global CR Day 2025</h3>
+              <p data-i18n="news2Text">PT Bank Maybank Indonesia, Tbk (Maybank Indonesia) held the Global CR Day and Cahaya Kasih programs, which integrate employee volunteering activities with sustainability and literacy initiatives.</p>
+              <a href="https://www.tribunnews.com/bisnis/7734771/dukung-generasi-berkelanjutan-maybank-indonesia-angkat-tema-literasi-hijau-di-global-cr-day-2025" data-i18n="readMore">Read More</a>
+            </div>
+          </article>
+          <article class="news-card">
+            <img src="https://asset-2.tribunnews.com/tribunnews/foto/bank/images/Gerakan-hijau-libatkan-mahasiswa-dari-50-kampus.jpg" alt="Students Join Green Movement">
+            <div class="card-content">
+              <h3 data-i18n="news3Title">Students Join Green Movement, 10,000 Seedlings Collected at Environmental Education Center</h3>
+              <p data-i18n="news3Text">A total of 10,000 tree seedlings were successfully collected in the green movement program involving students from various universities.</p>
+              <a href="https://www.tribunnews.com/nasional/7731367/mahasiswa-terlibat-dalam-gerakan-hijau-10000-bibit-terkumpul-di-pusat-edukasi-lingkungan" data-i18n="readMore">Read More</a>
+            </div>
+          </article>
+        </div>
+        <div class="text-center more-news-button-container">
+          <a href="/news" class="button button-secondary" data-i18n="moreNews">More News</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer-main">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h4 data-i18n="footerAbout">About</h4>
+          <ul>
+            <li><a href="#" data-i18n="footerOurStory">Our Story</a></li>
+            <li><a href="#" data-i18n="footerTeam">Team</a></li>
+            <li><a href="#" data-i18n="footerPress">Press</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4 data-i18n="footerResources">Resources</h4>
+          <ul>
+            <li><a href="#" data-i18n="footerIconLibrary">Icon Library</a></li>
+            <li><a href="#" data-i18n="footerForDevelopers">For Developers</a></li>
+            <li><a href="#" data-i18n="footerSupport">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4 data-i18n="footerConnect">Connect</h4>
+          <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+          </div>
+        </div>
+        <div class="footer-column newsletter">
+          <h4 data-i18n="footerNewsletter">Sign up for our newsletter</h4>
+          <p data-i18n="footerNewsletterText">Get the latest news and updates from the Greenesia community.</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Your email address" data-i18n="[placeholder]footerEmailPlaceholder">
+            <button type="submit" class="button button-primary" data-i18n="footerSignUp">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <footer class="site-footer-bottom">
+    <div class="container">
+      <p data-i18n="footerCopyright">&copy; 2025 Greenesia. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/toast.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/main.js?v=3.4"></script>
+  <script src="js/language.js"></script>
+  <script src="js/custom-dropdown.js"></script>
+  <script>
+    const header = document.querySelector('.site-header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+  <script src="js/pwa-init.js"></script>
+</body>
+</html>
