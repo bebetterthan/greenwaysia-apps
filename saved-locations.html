@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Saved Locations - Greenesia</title>
+  <link rel="icon" href="img/Logo_utama.png">
+  <link rel="stylesheet" href="css/style.css?v=3.0">
+  <style>
+    .saved-section {
+      padding: 6rem 0 4rem;
+      min-height: calc(100vh - 70px - 238px);
+    }
+    .saved-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .saved-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .saved-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .location-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .location-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    .location-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 3rem;
+    }
+    .location-content {
+      padding: 1.5rem;
+    }
+    .location-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: var(--dark-text);
+    }
+    .location-type {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .location-coords {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #666;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+    .location-notes {
+      color: #666;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .location-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn-view, .btn-delete {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .btn-view {
+      background: var(--primary-color);
+      color: white;
+    }
+    .btn-view:hover {
+      background: var(--secondary-color);
+    }
+    .btn-delete {
+      background: #ef5350;
+      color: white;
+    }
+    .btn-delete:hover {
+      background: #d32f2f;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .empty-state svg {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 2rem;
+      color: #ccc;
+    }
+    .empty-state h2 {
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    .empty-state p {
+      color: #999;
+      margin-bottom: 2rem;
+    }
+    .loading-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header site-header-solid">
+    <div class="container navbar">
+      <div class="navbar-brand">
+        <a href="/">
+          <img src="img/Logo_utama.png" alt="Greenesia Logo" class="logo">
+          <span>Greenesia</span>
+        </a>
+      </div>
+      <div class="nav-wrapper">
+        <button class="close-menu">&times;</button>
+        <nav class="main-nav">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/maps">Maps</a></li>
+            <li><a href="/impacts">Impacts</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/news">News</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="nav-actions">
+          <select class="language-switcher">
+            <option value="en" selected>EN</option>
+            <option value="id">ID</option>
+          </select>
+          <a href="/login" class="button button-donate">Get Started</a>
+        </div>
+      </div>
+      <button class="hamburger-menu">&#9776;</button>
+    </div>
+  </header>
+
+  <div class="overlay"></div>
+
+  <main>
+    <section class="saved-section">
+      <div class="container">
+        <div class="saved-header">
+          <h1>My Saved Locations</h1>
+          <p>Manage your favorite green locations</p>
+        </div>
+
+        <div id="loading-state" class="loading-spinner">
+          <div class="spinner"></div>
+        </div>
+
+        <div id="empty-state" class="empty-state" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+          </svg>
+          <h2>No Saved Locations Yet</h2>
+          <p>Start exploring maps and save your favorite locations</p>
+          <a href="/maps" class="button button-primary">Explore Maps</a>
+        </div>
+
+        <div id="saved-grid" class="saved-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer-main">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h4>About</h4>
+          <ul>
+            <li><a href="/about">Our Story</a></li>
+            <li><a href="/about">Team</a></li>
+            <li><a href="#">Press</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Icon Library</a></li>
+            <li><a href="#">For Developers</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Connect</h4>
+          <div class="social-links">
+            <a href="#">Facebook</a>
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <footer class="site-footer-bottom">
+    <div class="container">
+      <p>&copy; 2025 Greenesia. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js?v=3.4"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/saved-page.js"></script>
+</body>
+</html>
