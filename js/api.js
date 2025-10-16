@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+// Dynamic API URL - works for both local and production
+const API_BASE_URL = window.location.origin + '/api';
 
 const api = {
     async get(endpoint, params = {}) {

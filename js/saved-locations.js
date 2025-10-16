@@ -41,7 +41,7 @@ async function loadSavedLocations() {
     `;
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/saved-locations', {
+        const response = await fetch(window.location.origin + '/api/saved-locations', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'
@@ -403,7 +403,7 @@ async function viewSavedLocation(id) {
     if (!token) return;
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/saved-locations', {
+        const response = await fetch(window.location.origin + '/api/saved-locations', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'
@@ -446,7 +446,7 @@ async function getDirectionsTo(id) {
     }
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/saved-locations', {
+        const response = await fetch(window.location.origin + '/api/saved-locations', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'

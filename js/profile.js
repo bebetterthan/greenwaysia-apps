@@ -39,7 +39,7 @@ async function loadUserProfile() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://127.0.0.1:8000/api/saved-locations', {
+        const response = await fetch(window.location.origin + '/api/saved-locations', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'
@@ -91,7 +91,7 @@ async function handleProfileUpdate(e) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://127.0.0.1:8000/api/profile/update', {
+        const response = await fetch(window.location.origin + '/api/profile/update', {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -161,7 +161,7 @@ async function handlePasswordChange(e) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://127.0.0.1:8000/api/profile/change-password', {
+        const response = await fetch(window.location.origin + '/api/profile/change-password', {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,

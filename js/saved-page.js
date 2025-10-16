@@ -18,7 +18,7 @@ async function loadSavedLocationsPage() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://127.0.0.1:8000/api/saved-locations', {
+        const response = await fetch(window.location.origin + '/api/saved-locations', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json'
@@ -102,7 +102,7 @@ async function deleteLocationPage(id) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://127.0.0.1:8000/api/saved-locations/${id}`, {
+        const response = await fetch(window.location.origin + `/api/saved-locations/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
