@@ -1,0 +1,62 @@
+# Ignore development files
+.env
+.env.local
+.env.development
+node_modules/
+vendor/
+.git/
+.gitignore
+.gitattributes
+.editorconfig
+
+# Ignore test files
+tests/
+phpunit.xml
+.phpunit.result.cache
+
+# Ignore development tools
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore logs
+storage/logs/*.log
+storage/logs/laravel.log
+
+# Ignore cache (will be regenerated)
+bootstrap/cache/*.php
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Keep important gitkeep files
+!.gitkeep
+!storage/.gitkeep
+!storage/app/.gitkeep
+!storage/app/public/.gitkeep
+!storage/framework/.gitkeep
+!storage/framework/cache/.gitkeep
+!storage/framework/sessions/.gitkeep
+!storage/framework/views/.gitkeep
+!storage/logs/.gitkeep
+
+# Development documentation
+README.md
+CONTRIBUTING.md
+
+# Package manager files
+package-lock.json
+composer.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
