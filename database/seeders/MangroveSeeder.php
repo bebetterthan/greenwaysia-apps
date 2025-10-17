@@ -9,10 +9,17 @@ class MangroveSeeder extends Seeder
 {
     public function run(): void
     {
+        // NOTE: Mangrove GeoJSON data is loaded directly from frontend (maps.html)
+        // Data is fetched from GitHub Release for better performance and smaller project size
+        // No need to seed data into database as it's loaded dynamically in the frontend
+        
+        // Seeder skipped - Data loaded from frontend via GitHub Release
+        
+        /* ORIGINAL SEEDER CODE - Commented out for project size optimization
         $files = [
-            '25k' => base_path('../Web-Lomba-Vokasi_UB-main/Hutan_Mangrove_25K_simplified.json'),
-            '50k' => base_path('../Web-Lomba-Vokasi_UB-main/Hutan_Mangrove_50K_simplified.json'),
-            '250k' => base_path('../Web-Lomba-Vokasi_UB-main/Hutan_Mangrove_250K.json'),
+            '25k' => base_path('Hutan_Mangrove_25K_simplified.json'),
+            '50k' => base_path('Hutan_Mangrove_50K_simplified.json'),
+            '250k' => base_path('Hutan_Mangrove_250K.json'),
         ];
 
         foreach ($files as $resolution => $filePath) {
@@ -41,5 +48,6 @@ class MangroveSeeder extends Seeder
 
             $this->command->info("Mangrove data ({$resolution}) imported successfully!");
         }
+        */
     }
 }

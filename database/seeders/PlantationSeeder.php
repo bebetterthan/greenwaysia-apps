@@ -9,7 +9,14 @@ class PlantationSeeder extends Seeder
 {
     public function run(): void
     {
-        $jsonPath = base_path('../Web-Lomba-Vokasi_UB-main/Perkebunan_indonesia.json');
+        // NOTE: Plantation GeoJSON data is loaded directly from frontend (maps.html)
+        // Data is fetched from GitHub Release for better performance and smaller project size
+        // No need to seed data into database as it's loaded dynamically in the frontend
+        
+        // Seeder skipped - Data loaded from frontend via GitHub Release
+        
+        /* ORIGINAL SEEDER CODE - Commented out for project size optimization
+        $jsonPath = base_path('Perkebunan_indonesia.json');
 
         if (!file_exists($jsonPath)) {
             $this->command->error("GeoJSON file not found at: {$jsonPath}");
@@ -45,5 +52,6 @@ class PlantationSeeder extends Seeder
         }
 
         $this->command->info('Plantation data imported successfully!');
+        */
     }
 }

@@ -22,3 +22,15 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# GeoJSON Data Files (Large files - available on GitHub Release)
+Hutan_Mangrove_250K.json
+Hutan_Mangrove_25K_simplified.json
+Hutan_Mangrove_50K_simplified.json
+Perkebunan_indonesia.json
+
+# Backup folder
+*_backup_json/
+
+# Large media files
+cinematic.mp4
