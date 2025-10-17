@@ -411,8 +411,6 @@
       }
     }
 
-    map.on('zoomend', updateLayerVisibility);
-
     function updateLayerVisibility() {
       const zoom = map.getZoom();
       const lowResToggle = document.querySelector('.overlay-toggle[data-layer="mangrove250k"]');
@@ -420,38 +418,20 @@
       const highResToggle = document.querySelector('.overlay-toggle[data-layer="mangrove25k"]');
 
       if (lowResToggle && lowResToggle.checked && mangrove250kLayer) {
-        if (zoom >= 8) {
-          if (map.hasLayer(mangrove250kLayer)) {
-            map.removeLayer(mangrove250kLayer);
-          }
-        } else {
-          if (!map.hasLayer(mangrove250kLayer)) {
-            map.addLayer(mangrove250kLayer);
-          }
+        if (!map.hasLayer(mangrove250kLayer)) {
+          map.addLayer(mangrove250kLayer);
         }
       }
 
       if (medResToggle && medResToggle.checked && mangrove50kLayer) {
-        if (zoom < 8 || zoom >= 12) {
-          if (map.hasLayer(mangrove50kLayer)) {
-            map.removeLayer(mangrove50kLayer);
-          }
-        } else {
-          if (!map.hasLayer(mangrove50kLayer)) {
-            map.addLayer(mangrove50kLayer);
-          }
+        if (!map.hasLayer(mangrove50kLayer)) {
+          map.addLayer(mangrove50kLayer);
         }
       }
 
       if (highResToggle && highResToggle.checked && mangrove25kLayer) {
-        if (zoom < 12) {
-          if (map.hasLayer(mangrove25kLayer)) {
-            map.removeLayer(mangrove25kLayer);
-          }
-        } else {
-          if (!map.hasLayer(mangrove25kLayer)) {
-            map.addLayer(mangrove25kLayer);
-          }
+        if (!map.hasLayer(mangrove25kLayer)) {
+          map.addLayer(mangrove25kLayer);
         }
       }
     }
@@ -460,6 +440,7 @@
 
     function onEachFeature(feature, layer) {
       layer.on('click', async function (e) {
+        L.DomEvent.stopPropagation(e);
         const clickLocation = e.latlng;
 
         try {
@@ -467,7 +448,8 @@
             maxWidth: 350,
             className: 'custom-popup',
             autoPan: true,
-            autoPanPadding: [50, 50]
+            autoPanPadding: [50, 50],
+            closeButton: true
           })
           .setLatLng(clickLocation)
           .setContent('<div style="text-align: center; padding: 10px;">Loading location details...</div>')
