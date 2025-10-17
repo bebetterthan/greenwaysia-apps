@@ -102,7 +102,7 @@ function displaySavedLocations(locations) {
     container.innerHTML = html;
 
     locations.forEach(location => {
-        if (location.location_data && location.location_data.lat && location.location_data.lng) {
+        if (location.location_data && (location.location_data.lat || location.location_data.latitude) && (location.location_data.lng || location.location_data.longitude)) {
             addLocationMarker(location);
         }
     });
@@ -113,8 +113,8 @@ function createLocationCard(location) {
     const color = getLocationTypeColor(location.location_type);
     const date = location.created_at ? new Date(location.created_at) : new Date();
     const timeAgo = getTimeAgo(date);
-    const lat = location.location_data?.lat || 0;
-    const lng = location.location_data?.lng || 0;
+    const lat = location.location_data?.latitude || location.location_data?.lat || 0;
+    const lng = location.location_data?.longitude || location.location_data?.lng || 0;
 
     return `
         <div class="saved-location-card" data-id="${location.id}">
@@ -209,48 +209,37 @@ function getTimeAgo(date) {
 }
 
 function addLocationMarker(location) {
-    if (!location.location_data || !location.location_data.lat || !location.location_data.lng) return;
+    const lat = location.location_data?.latitude || location.location_data?.lat;
+    const lng = location.location_data?.longitude || location.location_data?.lng;
+    
+    if (!location.location_data || !lat || !lng) return;
 
     const markerColor = getLocationTypeColor(location.location_type);
-            const markerIcon = L.divIcon({
-                className: 'saved-location-marker',
-                html: `<div style="background: ${markerColor}; width: 15px; height: 15px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5);"></div>`,
-                iconSize: [15, 15],
-                iconAnchor: [7.5, 7.5]
-            });
-
-            const marker = L.marker([location.location_data.lat, location.location_data.lng], {
-                icon: markerIcon
-            }).addTo(map);
-
-            marker.bindPopup(`
-                <div style="text-align: center;">
-                    <strong>${location.name}</strong><br>
-                    <small>${location.location_type}</small><br>
-                    ${location.notes ? `<small>${location.notes}</small>` : ''}
-                </div>
-            `);
-
-            marker.on('click', () => {
-                map.setView([location.location_data.lat, location.location_data.lng], 12);
-            });
-
-            savedLocationMarkers.push(marker);
-        }
+    const markerIcon = L.divIcon({
+        className: 'saved-location-marker',
+        html: `<div style="background: ${markerColor}; width: 15px; height: 15px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.5);"></div>`,
+        iconSize: [15, 15],
+        iconAnchor: [7.5, 7.5]
     });
 
-    const items = container.querySelectorAll('.saved-location-item');
-    items.forEach(item => {
-        item.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('delete-btn')) {
-                const locationId = parseInt(item.dataset.id);
-                const location = locations.find(loc => loc.id === locationId);
-                if (location && location.location_data) {
-                    map.setView([location.location_data.lat, location.location_data.lng], 12);
-                }
-            }
-        });
+    const marker = L.marker([lat, lng], {
+        icon: markerIcon,
+        locationId: location.id
+    }).addTo(map);
+
+    marker.bindPopup(`
+        <div style="text-align: center;">
+            <strong>${location.name}</strong><br>
+            <small>${location.location_type}</small><br>
+            ${location.notes ? `<small>${location.notes}</small>` : ''}
+        </div>
+    `);
+
+    marker.on('click', () => {
+        map.setView([lat, lng], 12);
     });
+
+    savedLocationMarkers.push(marker);
 }
 
 async function saveCurrentLocation() {
@@ -413,8 +402,11 @@ async function viewSavedLocation(id) {
         const result = await response.json();
         if (result.success) {
             const location = result.data.find(loc => loc.id === id);
-            if (location && location.location_data && location.location_data.lat && location.location_data.lng) {
-                map.setView([location.location_data.lat, location.location_data.lng], 15, {
+            const lat = location?.location_data?.latitude || location?.location_data?.lat;
+            const lng = location?.location_data?.longitude || location?.location_data?.lng;
+            
+            if (location && location.location_data && lat && lng) {
+                map.setView([lat, lng], 15, {
                     animate: true,
                     duration: 1
                 });
@@ -456,11 +448,12 @@ async function getDirectionsTo(id) {
         const result = await response.json();
         if (result.success) {
             const location = result.data.find(loc => loc.id === id);
-            if (location && location.location_data && location.location_data.lat && location.location_data.lng) {
+            const toLat = location?.location_data?.latitude || location?.location_data?.lat;
+            const toLng = location?.location_data?.longitude || location?.location_data?.lng;
+            
+            if (location && location.location_data && toLat && toLng) {
                 const fromLat = lastKnownPosition.coords.latitude;
                 const fromLng = lastKnownPosition.coords.longitude;
-                const toLat = location.location_data.lat;
-                const toLng = location.location_data.lng;
 
                 const url = `https://www.google.com/maps/dir/?api=1&origin=${fromLat},${fromLng}&destination=${toLat},${toLng}`;
                 window.open(url, '_blank');
