@@ -154,12 +154,6 @@ function createLocationCard(location) {
                     </svg>
                     View
                 </button>
-                <button class="action-btn directions-btn" onclick="getDirectionsTo(${location.id})" title="Get directions">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
-                    </svg>
-                    Directions
-                </button>
                 <button class="action-btn delete-btn-icon" onclick="deleteSavedLocation(${location.id})" title="Delete">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 16px; height: 16px;">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
@@ -426,54 +420,8 @@ async function viewSavedLocation(id) {
     }
 }
 
-async function getDirectionsTo(id) {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    if (!lastKnownPosition) {
-        if (typeof showToast === 'function') {
-            showToast('Current location not available', 'warning');
-        }
-        return;
-    }
-
-    try {
-        const response = await fetch(window.location.origin + '/api/saved-locations', {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json'
-            }
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            const location = result.data.find(loc => loc.id === id);
-            const toLat = location?.location_data?.latitude || location?.location_data?.lat;
-            const toLng = location?.location_data?.longitude || location?.location_data?.lng;
-            
-            if (location && location.location_data && toLat && toLng) {
-                const fromLat = lastKnownPosition.coords.latitude;
-                const fromLng = lastKnownPosition.coords.longitude;
-
-                const url = `https://www.google.com/maps/dir/?api=1&origin=${fromLat},${fromLng}&destination=${toLat},${toLng}`;
-                window.open(url, '_blank');
-
-                if (typeof showToast === 'function') {
-                    showToast(`Opening directions to ${location.name}`, 'info');
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error getting directions:', error);
-        if (typeof showToast === 'function') {
-            showToast('Error getting directions', 'error');
-        }
-    }
-}
-
 if (typeof window !== 'undefined') {
     window.viewSavedLocation = viewSavedLocation;
-    window.getDirectionsTo = getDirectionsTo;
     window.saveCurrentLocation = saveCurrentLocation;
     window.deleteSavedLocation = deleteSavedLocation;
 }
