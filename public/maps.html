@@ -521,13 +521,16 @@
         return;
       }
 
+      // Simpan data sebelum modal ditutup
+      const tempLocationData = { ...pendingLocationData };
+
       closeSaveLocationModal();
 
       const locationData = {
         name: locationName,
-        latitude: pendingLocationData.lat,
-        longitude: pendingLocationData.lng,
-        type: pendingLocationData.type || 'custom',
+        latitude: tempLocationData.lat,
+        longitude: tempLocationData.lng,
+        type: tempLocationData.type || 'custom',
         description: `Saved from map click at ${new Date().toLocaleString()}`
       };
 
