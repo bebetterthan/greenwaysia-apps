@@ -62,9 +62,12 @@ function createLocationCard(location) {
     const card = document.createElement('div');
     card.className = 'location-card';
 
-    const typeColor = location.type === 'mangrove' ? '#4CAF50' : '#FF9800';
-    const typeLabel = location.type === 'mangrove' ? 'Mangrove' : 'Plantation';
-    const icon = location.type === 'mangrove' ? '🌿' : '🌾';
+    const typeColor = location.location_type === 'mangrove' ? '#4CAF50' : '#FF9800';
+    const typeLabel = location.location_type === 'mangrove' ? 'Mangrove' : 'Plantation';
+    const icon = location.location_type === 'mangrove' ? '🌿' : '🌾';
+    
+    const lat = location.location_data?.latitude || 0;
+    const lng = location.location_data?.longitude || 0;
 
     card.innerHTML = `
         <div class="location-image" style="background: linear-gradient(135deg, ${typeColor}, ${typeColor}dd);">
@@ -78,11 +81,11 @@ function createLocationCard(location) {
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                 </svg>
-                <span>${location.latitude}, ${location.longitude}</span>
+                <span>${lat}, ${lng}</span>
             </div>
             ${location.notes ? `<p class="location-notes">${location.notes}</p>` : ''}
             <div class="location-actions">
-                <button class="btn-view" onclick="viewOnMap(${location.latitude}, ${location.longitude})">View on Map</button>
+                <button class="btn-view" onclick="viewOnMap(${lat}, ${lng})">View on Map</button>
                 <button class="btn-delete" onclick="deleteLocationPage(${location.id})">Delete</button>
             </div>
         </div>
