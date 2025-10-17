@@ -6,7 +6,6 @@
   <title data-i18n="greenesiaMap">Greenesia - Map</title>
   <link rel="icon" href="img/Logo_utama.png">
 
-  <!-- PWA Meta Tags -->
   <meta name="description" content="Monitor mangrove forests and plantations in Indonesia with interactive maps and real-time location tracking">
   <meta name="theme-color" content="#2ecc71">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,16 +13,13 @@
   <meta name="apple-mobile-web-app-title" content="Greenesia">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json">
 
-  <!-- Apple Touch Icons -->
   <link rel="apple-touch-icon" href="/img/icon-192x192.png">
   <link rel="apple-touch-icon" sizes="152x152" href="/img/icon-152x152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/img/icon-192x192.png">
   <link rel="apple-touch-icon" sizes="167x167" href="/img/icon-192x192.png">
 
-  <!-- Splash Screens for iOS -->
   <link rel="apple-touch-startup-image" href="/img/splash-640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)">
   <link rel="apple-touch-startup-image" href="/img/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)">
   <link rel="apple-touch-startup-image" href="/img/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)">
@@ -264,78 +260,217 @@
     }).addTo(map);
 
     let perkebunanLayer, mangrove250kLayer, mangrove50kLayer, mangrove25kLayer;
+    let perkebunanData, mangrove250kData, mangrove50kData, mangrove25kData;
     let tempMarker = null;
-    let layersLoaded = false;
+    let layersLoaded = {
+      perkebunan: false,
+      mangrove250k: false,
+      mangrove50k: false,
+      mangrove25k: false
+    };
+    let loadingInProgress = {
+      perkebunan: false,
+      mangrove250k: false,
+      mangrove50k: false,
+      mangrove25k: false
+    };
 
-    Promise.all([
-      fetch('Perkebunan_indonesia.json').then(res => res.json()),
-      fetch('Hutan_Mangrove_250K.json').then(res => res.json()),
-      fetch('Hutan_Mangrove_50K_simplified.json').then(res => res.json()),
-      fetch('Hutan_Mangrove_25K_simplified.json').then(res => res.json())
-    ])
-    .then(([perkebunanData, mangrove250k, mangrove50k, mangrove25k]) => {
-      perkebunanLayer = L.geoJSON(perkebunanData, {
-        style: function(feature) {
-          return {
-            fillColor: "#ff6b35",
-            color: "#d94c1a",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.6
-          };
-        },
-        onEachFeature: onEachFeature,
-        renderer: L.canvas()
-      });
+    async function loadPerkebunanLayer() {
+      if (perkebunanLayer || loadingInProgress.perkebunan) return;
+      
+      loadingInProgress.perkebunan = true;
+      showLoadingToast('Loading Plantation data...');
+      
+      try {
+        if (!perkebunanData) {
+          const response = await fetch('Perkebunan_indonesia.json');
+          perkebunanData = await response.json();
+        }
+        
+        perkebunanLayer = L.geoJSON(perkebunanData, {
+          style: function(feature) {
+            return {
+              fillColor: "#ff6b35",
+              color: "#d94c1a",
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.6
+            };
+          },
+          onEachFeature: onEachFeature,
+          renderer: L.canvas()
+        });
+        
+        layersLoaded.perkebunan = true;
+        showToast('Plantation layer loaded', 'success');
+      } catch (err) {
+        console.error("Failed to load Perkebunan:", err);
+        showToast('Failed to load Plantation layer', 'error');
+      } finally {
+        loadingInProgress.perkebunan = false;
+      }
+    }
 
-      mangrove250kLayer = L.geoJSON(mangrove250k, {
-        style: function(feature) {
-          return {
-            fillColor: "#2ecc71",
-            color: "#27ae60",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.7
-          };
-        },
-        onEachFeature: onEachFeature,
-        renderer: L.canvas()
-      });
+    async function loadMangrove250kLayer() {
+      if (mangrove250kLayer || loadingInProgress.mangrove250k) return;
+      
+      loadingInProgress.mangrove250k = true;
+      showLoadingToast('Loading Mangrove (Low Res) data...');
+      
+      try {
+        if (!mangrove250kData) {
+          const response = await fetch('Hutan_Mangrove_250K.json');
+          mangrove250kData = await response.json();
+        }
+        
+        mangrove250kLayer = L.geoJSON(mangrove250kData, {
+          style: function(feature) {
+            return {
+              fillColor: "#2ecc71",
+              color: "#27ae60",
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.7
+            };
+          },
+          onEachFeature: onEachFeature,
+          renderer: L.canvas()
+        });
+        
+        layersLoaded.mangrove250k = true;
+        showToast('Mangrove (Low Res) loaded', 'success');
+      } catch (err) {
+        console.error("Failed to load Mangrove 250K:", err);
+        showToast('Failed to load Mangrove (Low Res)', 'error');
+      } finally {
+        loadingInProgress.mangrove250k = false;
+      }
+    }
 
-      mangrove50kLayer = L.geoJSON(mangrove50k, {
-        style: function(feature) {
-          return {
-            fillColor: "#1abc9c",
-            color: "#16a085",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.75
-          };
-        },
-        onEachFeature: onEachFeature,
-        renderer: L.canvas()
-      });
+    async function loadMangrove50kLayer() {
+      if (mangrove50kLayer || loadingInProgress.mangrove50k) return;
+      
+      loadingInProgress.mangrove50k = true;
+      showLoadingToast('Loading Mangrove (Med Res) data...');
+      
+      try {
+        if (!mangrove50kData) {
+          const response = await fetch('Hutan_Mangrove_50K_simplified.json');
+          mangrove50kData = await response.json();
+        }
+        
+        mangrove50kLayer = L.geoJSON(mangrove50kData, {
+          style: function(feature) {
+            return {
+              fillColor: "#1abc9c",
+              color: "#16a085",
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.75
+            };
+          },
+          onEachFeature: onEachFeature,
+          renderer: L.canvas()
+        });
+        
+        layersLoaded.mangrove50k = true;
+        showToast('Mangrove (Med Res) loaded', 'success');
+      } catch (err) {
+        console.error("Failed to load Mangrove 50K:", err);
+        showToast('Failed to load Mangrove (Med Res)', 'error');
+      } finally {
+        loadingInProgress.mangrove50k = false;
+      }
+    }
 
-      mangrove25kLayer = L.geoJSON(mangrove25k, {
-        style: function(feature) {
-          return {
-            fillColor: "#00d9ff",
-            color: "#00b8d4",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8
-          };
-        },
-        onEachFeature: onEachFeature,
-        renderer: L.canvas()
-      });
+    async function loadMangrove25kLayer() {
+      if (mangrove25kLayer || loadingInProgress.mangrove25k) return;
+      
+      loadingInProgress.mangrove25k = true;
+      showLoadingToast('Loading Mangrove (High Res) data...');
+      
+      try {
+        if (!mangrove25kData) {
+          const response = await fetch('Hutan_Mangrove_25K_simplified.json');
+          mangrove25kData = await response.json();
+        }
+        
+        mangrove25kLayer = L.geoJSON(mangrove25kData, {
+          style: function(feature) {
+            return {
+              fillColor: "#00d9ff",
+              color: "#00b8d4",
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.8
+            };
+          },
+          onEachFeature: onEachFeature,
+          renderer: L.canvas()
+        });
+        
+        layersLoaded.mangrove25k = true;
+        showToast('Mangrove (High Res) loaded', 'success');
+      } catch (err) {
+        console.error("Failed to load Mangrove 25K:", err);
+        showToast('Failed to load Mangrove (High Res)', 'error');
+      } finally {
+        loadingInProgress.mangrove25k = false;
+      }
+    }
 
-      layersLoaded = true;
-      initLayerControls();
-    })
-    .catch(err => {
-      console.error("Failed to load one or more GeoJSON files:", err);
-    });
+    function showLoadingToast(message) {
+      if (typeof showToast === 'function') {
+        showToast(message, 'info');
+      }
+    }
+
+    map.on('zoomend', updateLayerVisibility);
+
+    function updateLayerVisibility() {
+      const zoom = map.getZoom();
+      const lowResToggle = document.getElementById('toggle-mangrove-low');
+      const medResToggle = document.getElementById('toggle-mangrove-med');
+      const highResToggle = document.getElementById('toggle-mangrove-high');
+
+      if (lowResToggle && lowResToggle.checked && mangrove250kLayer) {
+        if (zoom >= 8) {
+          if (map.hasLayer(mangrove250kLayer)) {
+            map.removeLayer(mangrove250kLayer);
+          }
+        } else {
+          if (!map.hasLayer(mangrove250kLayer)) {
+            map.addLayer(mangrove250kLayer);
+          }
+        }
+      }
+
+      if (medResToggle && medResToggle.checked && mangrove50kLayer) {
+        if (zoom < 8 || zoom >= 12) {
+          if (map.hasLayer(mangrove50kLayer)) {
+            map.removeLayer(mangrove50kLayer);
+          }
+        } else {
+          if (!map.hasLayer(mangrove50kLayer)) {
+            map.addLayer(mangrove50kLayer);
+          }
+        }
+      }
+
+      if (highResToggle && highResToggle.checked && mangrove25kLayer) {
+        if (zoom < 12) {
+          if (map.hasLayer(mangrove25kLayer)) {
+            map.removeLayer(mangrove25kLayer);
+          }
+        } else {
+          if (!map.hasLayer(mangrove25kLayer)) {
+            map.addLayer(mangrove25kLayer);
+          }
+        }
+      }
+    }
+
+    initLayerControls();
 
     function onEachFeature(feature, layer) {
       layer.on('click', async function (e) {
@@ -521,7 +656,6 @@
         return;
       }
 
-      // Simpan data sebelum modal ditutup
       const tempLocationData = { ...pendingLocationData };
 
       closeSaveLocationModal();
@@ -566,7 +700,6 @@
             } else {
               alert('Please login to save locations');
             }
-            // Redirect to login page
             setTimeout(() => {
               window.location.href = '/login.html';
             }, 1500);
@@ -602,41 +735,51 @@
       const overlayToggles = document.querySelectorAll('.overlay-toggle');
 
       overlayToggles.forEach(toggle => {
-        toggle.addEventListener('change', function() {
+        toggle.addEventListener('change', async function() {
           const layerName = this.dataset.layer;
-          let targetLayer = null;
+          const isChecked = this.checked;
 
           switch(layerName) {
             case 'plantation':
-              targetLayer = perkebunanLayer;
-              if (this.checked) {
-                map.addLayer(perkebunanLayer);
+              if (isChecked) {
+                await loadPerkebunanLayer();
+                if (perkebunanLayer) {
+                  map.addLayer(perkebunanLayer);
+                }
               } else {
-                map.removeLayer(perkebunanLayer);
+                if (perkebunanLayer) {
+                  map.removeLayer(perkebunanLayer);
+                }
               }
               break;
             case 'mangrove250k':
-              targetLayer = mangrove250kLayer;
-              if (this.checked) {
-                map.addLayer(mangrove250kLayer);
+              if (isChecked) {
+                await loadMangrove250kLayer();
+                updateLayerVisibility();
               } else {
-                map.removeLayer(mangrove250kLayer);
+                if (mangrove250kLayer) {
+                  map.removeLayer(mangrove250kLayer);
+                }
               }
               break;
             case 'mangrove50k':
-              targetLayer = mangrove50kLayer;
-              if (this.checked) {
-                map.addLayer(mangrove50kLayer);
+              if (isChecked) {
+                await loadMangrove50kLayer();
+                updateLayerVisibility();
               } else {
-                map.removeLayer(mangrove50kLayer);
+                if (mangrove50kLayer) {
+                  map.removeLayer(mangrove50kLayer);
+                }
               }
               break;
             case 'mangrove25k':
-              targetLayer = mangrove25kLayer;
-              if (this.checked) {
-                map.addLayer(mangrove25kLayer);
+              if (isChecked) {
+                await loadMangrove25kLayer();
+                updateLayerVisibility();
               } else {
-                map.removeLayer(mangrove25kLayer);
+                if (mangrove25kLayer) {
+                  map.removeLayer(mangrove25kLayer);
+                }
               }
               break;
           }
@@ -714,7 +857,6 @@
         const recenterBtn = document.querySelector('.recenter-btn');
         const hamburger = document.querySelector('.hamburger-menu');
 
-        // Hide sidebar and recenter buttons
         if (sidebarToggle) {
           sidebarToggle.classList.add('hidden');
         }
@@ -722,7 +864,6 @@
           recenterBtn.classList.add('hidden');
         }
 
-        // Also hide hamburger menu when sidebar is open
         if (hamburger) {
           hamburger.classList.add('hidden');
         }
@@ -733,7 +874,6 @@
         const recenterBtn = document.querySelector('.recenter-btn');
         const hamburger = document.querySelector('.hamburger-menu');
 
-        // Show sidebar and recenter buttons
         if (sidebarToggle) {
           sidebarToggle.classList.remove('hidden');
         }
@@ -741,7 +881,6 @@
           recenterBtn.classList.remove('hidden');
         }
 
-        // Show hamburger menu when sidebar closes
         if (hamburger) {
           hamburger.classList.remove('hidden');
         }
@@ -779,7 +918,6 @@
         sidebarOverlay.addEventListener('click', closeSidebar);
       }
 
-      // Touch gesture for swipe up/down
       if (sidebar) {
         const dragHandle = sidebar.querySelector('.sidebar-drag-handle');
         let startY = 0;
@@ -795,7 +933,6 @@
           startTime = Date.now();
           isDragging = true;
 
-          // Remove transition for smooth dragging
           sidebar.style.transition = 'none';
           sidebar.style.willChange = 'transform';
 
@@ -805,18 +942,15 @@
         function handleTouchMove(e) {
           if (!isDragging) return;
 
-          e.preventDefault(); // Prevent scroll
+          e.preventDefault();
           currentY = e.touches[0].clientY;
           const deltaY = currentY - startY;
 
-          // Allow dragging down to close, or up to expand
           if (deltaY > 0) {
-            // Dragging down - follow finger with resistance
             const resistance = 1 - (deltaY / (window.innerHeight * 2));
             const translateY = deltaY * Math.max(resistance, 0.3);
             sidebar.style.transform = `translateY(${translateY}px)`;
           } else if (deltaY < -30) {
-            // Dragging up - expand to fullscreen
             sidebar.classList.add('fullscreen');
           }
         }
@@ -826,48 +960,40 @@
 
           const deltaY = currentY - startY;
           const deltaTime = Date.now() - startTime;
-          const velocity = Math.abs(deltaY) / deltaTime; // px per ms
+          const velocity = Math.abs(deltaY) / deltaTime;
 
-          // Re-enable transition
           sidebar.style.transition = '';
           sidebar.style.willChange = '';
 
           console.log('Touch end - delta:', deltaY, 'velocity:', velocity.toFixed(2));
 
-          // Fast swipe down (velocity > 0.5) or dragged down > 80px
           if ((velocity > 0.5 && deltaY > 30) || deltaY > 80) {
             console.log('Closing sidebar (swipe down)');
 
-            // Animate close
             sidebar.style.transform = 'translateY(100%)';
 
-            // Wait for animation then close completely
             setTimeout(() => {
               closeSidebar();
               sidebar.classList.remove('fullscreen');
               sidebar.style.transform = '';
             }, 300);
           } else if (deltaY < -30) {
-            // Dragged up - keep fullscreen
             console.log('Expanding to fullscreen (swipe up)');
             sidebar.classList.add('fullscreen');
             sidebar.style.transform = 'translateY(0)';
           } else {
-            // Snap back to original position
             sidebar.style.transform = 'translateY(0)';
           }
 
           isDragging = false;
         }
 
-        // Add touch listeners to drag handle
         if (dragHandle) {
           dragHandle.addEventListener('touchstart', handleTouchStart, { passive: true });
           dragHandle.addEventListener('touchmove', handleTouchMove, { passive: false });
           dragHandle.addEventListener('touchend', handleTouchEnd, { passive: true });
         }
 
-        // Add touch listeners to sidebar header
         const sidebarHeader = sidebar.querySelector('.sidebar-header');
         if (sidebarHeader) {
           sidebarHeader.addEventListener('touchstart', handleTouchStart, { passive: true });
