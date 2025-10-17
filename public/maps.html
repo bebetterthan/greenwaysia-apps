@@ -279,7 +279,6 @@
       if (perkebunanLayer || loadingInProgress.perkebunan) return;
       
       loadingInProgress.perkebunan = true;
-      showLoadingToast('Loading Plantation data...');
       
       try {
         if (!perkebunanData) {
@@ -302,7 +301,6 @@
         });
         
         layersLoaded.perkebunan = true;
-        showToast('Plantation layer loaded', 'success');
       } catch (err) {
         console.error("Failed to load Perkebunan:", err);
         showToast('Failed to load Plantation layer', 'error');
@@ -315,7 +313,6 @@
       if (mangrove250kLayer || loadingInProgress.mangrove250k) return;
       
       loadingInProgress.mangrove250k = true;
-      showLoadingToast('Loading Mangrove (Low Res) data...');
       
       try {
         if (!mangrove250kData) {
@@ -338,7 +335,6 @@
         });
         
         layersLoaded.mangrove250k = true;
-        showToast('Mangrove (Low Res) loaded', 'success');
       } catch (err) {
         console.error("Failed to load Mangrove 250K:", err);
         showToast('Failed to load Mangrove (Low Res)', 'error');
@@ -351,7 +347,6 @@
       if (mangrove50kLayer || loadingInProgress.mangrove50k) return;
       
       loadingInProgress.mangrove50k = true;
-      showLoadingToast('Loading Mangrove (Med Res) data...');
       
       try {
         if (!mangrove50kData) {
@@ -374,7 +369,6 @@
         });
         
         layersLoaded.mangrove50k = true;
-        showToast('Mangrove (Med Res) loaded', 'success');
       } catch (err) {
         console.error("Failed to load Mangrove 50K:", err);
         showToast('Failed to load Mangrove (Med Res)', 'error');
@@ -387,7 +381,6 @@
       if (mangrove25kLayer || loadingInProgress.mangrove25k) return;
       
       loadingInProgress.mangrove25k = true;
-      showLoadingToast('Loading Mangrove (High Res) data...');
       
       try {
         if (!mangrove25kData) {
@@ -410,7 +403,6 @@
         });
         
         layersLoaded.mangrove25k = true;
-        showToast('Mangrove (High Res) loaded', 'success');
       } catch (err) {
         console.error("Failed to load Mangrove 25K:", err);
         showToast('Failed to load Mangrove (High Res)', 'error');
@@ -419,19 +411,13 @@
       }
     }
 
-    function showLoadingToast(message) {
-      if (typeof showToast === 'function') {
-        showToast(message, 'info');
-      }
-    }
-
     map.on('zoomend', updateLayerVisibility);
 
     function updateLayerVisibility() {
       const zoom = map.getZoom();
-      const lowResToggle = document.getElementById('toggle-mangrove-low');
-      const medResToggle = document.getElementById('toggle-mangrove-med');
-      const highResToggle = document.getElementById('toggle-mangrove-high');
+      const lowResToggle = document.querySelector('.overlay-toggle[data-layer="mangrove250k"]');
+      const medResToggle = document.querySelector('.overlay-toggle[data-layer="mangrove50k"]');
+      const highResToggle = document.querySelector('.overlay-toggle[data-layer="mangrove25k"]');
 
       if (lowResToggle && lowResToggle.checked && mangrove250kLayer) {
         if (zoom >= 8) {
